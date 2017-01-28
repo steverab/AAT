@@ -15,6 +15,8 @@ public class AATApplication extends Application {
 
         router.attach("/generate", GenerateResource.class);
 
+        router.attach("/bonus", BonusResource.class);
+
         router.attach("/users", UserResource.class);
         router.attach("/users/{userId}", UserResource.class);
 

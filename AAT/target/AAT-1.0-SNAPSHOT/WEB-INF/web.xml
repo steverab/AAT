@@ -12,7 +12,7 @@
         <servlet-class>org.restlet.ext.servlet.ServerServlet</servlet-class>
         <init-param>
             <param-name>org.restlet.application</param-name>
-            <param-value>de.tum.in.AAT.resources.AATApplication</param-value>
+            <param-value>de.tum.in.AAT.application.AATApplication</param-value>
         </init-param>
     </servlet>
 

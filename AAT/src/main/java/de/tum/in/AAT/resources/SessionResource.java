@@ -187,9 +187,13 @@ public class SessionResource extends ServerResource {
                 List<Attendance> attendances = ObjectifyService.ofy().load().type(Attendance.class).filter("code =", code).list();
 
                 if (attendances.size() == 1) {
-                    attendance = attendances.get(0);
-                    attendance.setConfirmed((short)1);
-                    ObjectifyService.ofy().save().entity(attendance).now();
+                    if (attendances.get(0).getConfirmed() == 0) {
+                        attendance = attendances.get(0);
+                        attendance.setConfirmed((short)1);
+                        ObjectifyService.ofy().save().entity(attendance).now();
+                        attendance.getStudent().getContributions().add(attendance);
+                        ObjectifyService.ofy().save().entity(attendance.getStudent()).now();
+                    }
                     return new StringRepresentation("");
                 } else {
                     throw new ResourceException(404, "Not found", "No code record found", null);
@@ -215,9 +219,13 @@ public class SessionResource extends ServerResource {
                 List<Presentation> presentations = ObjectifyService.ofy().load().type(Presentation.class).filter("code =", code).list();
 
                 if (presentations.size() == 1) {
-                    presentation = presentations.get(0);
-                    presentation.setConfirmed((short)1);
-                    ObjectifyService.ofy().save().entity(presentation).now();
+                    if (presentations.get(0).getConfirmed() == 0) {
+                        presentation = presentations.get(0);
+                        presentation.setConfirmed((short)1);
+                        ObjectifyService.ofy().save().entity(presentation).now();
+                        presentation.getStudent().getContributions().add(presentation);
+                        ObjectifyService.ofy().save().entity(presentation.getStudent()).now();
+                    }
                     return new StringRepresentation("");
                 } else {
                     throw new ResourceException(404, "Not found", "No code record found", null);
