@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="AAT:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="AAT-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="AAT:war exploded" />
+    </root>
+  </artifact>
+</component>
