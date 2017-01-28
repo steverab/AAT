@@ -1,6 +1,7 @@
 package de.tum.in.AAT.resources;
 
 import com.googlecode.objectify.ObjectifyService;
+import de.tum.in.AAT.helpers.PushHelper;
 import de.tum.in.AAT.models.Attendance;
 import de.tum.in.AAT.models.Contribution;
 import de.tum.in.AAT.models.Student;
@@ -18,7 +19,7 @@ public class BonusResource extends ServerResource {
     public Representation getBonus() {
 
         ArrayList<Student> bonusStudents = new ArrayList<>();
-        int requiredAttendances = 10;
+        int requiredAttendances = 1;
         int requiredPresentations = 1;
 
         List<Student> students = ObjectifyService.ofy().load().type(Student.class).list();
@@ -41,7 +42,13 @@ public class BonusResource extends ServerResource {
             }
         }
 
-        // TODO: send push
+        for (Student student : bonusStudents) {
+            try {
+                PushHelper.pushFCMNotification(student.getDeviceToken());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
         return new StringRepresentation("");
     }

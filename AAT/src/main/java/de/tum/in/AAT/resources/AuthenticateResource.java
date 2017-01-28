@@ -44,6 +44,7 @@ public class AuthenticateResource extends ServerResource {
 
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("token", token);
+            jsonObject.put("userId", user.getId());
 
             if (user instanceof Student) {
                 jsonObject.put("groupId", ((Student) user).getGroupId());

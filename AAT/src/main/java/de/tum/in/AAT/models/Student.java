@@ -19,6 +19,8 @@ public class Student extends User {
     @JsonBackReference
     private Ref<Group> group;
 
+    private String deviceToken;
+
     @JsonManagedReference
     private List<Contribution> contributions = new ArrayList<>();
 
@@ -33,6 +35,10 @@ public class Student extends User {
         super(email, password);
     }
 
+    public Student(String email, String password, String deviceToken) {
+        super(email, password);
+        this.deviceToken = deviceToken;
+    }
 
     public Ref<Group> getGroup() {
         return group;
@@ -42,6 +48,9 @@ public class Student extends User {
         return contributions;
     }
 
+    public String getDeviceToken() {
+        return deviceToken;
+    }
 
 
     public void setGroup(Group group) {
@@ -50,5 +59,9 @@ public class Student extends User {
 
     public void setContributions(List<Contribution> contributions) {
         this.contributions = contributions;
+    }
+
+    public void setDeviceToken(String deviceToken) {
+        this.deviceToken = deviceToken;
     }
 }
