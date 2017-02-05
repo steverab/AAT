@@ -17,7 +17,6 @@ public class BonusResource extends ServerResource {
 
     @Get
     public Representation getBonus() {
-
         ArrayList<Student> bonusStudents = new ArrayList<>();
         int requiredAttendances = 1;
         int requiredPresentations = 1;

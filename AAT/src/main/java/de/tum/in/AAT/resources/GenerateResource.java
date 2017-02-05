@@ -21,7 +21,6 @@ public class GenerateResource extends ServerResource {
             clearAllContentsFromDatabase();
             generateSampleContent();
         }
-
         return new StringRepresentation("Sample objects generated");
     }
 

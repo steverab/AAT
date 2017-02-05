@@ -7,21 +7,17 @@ import de.tum.in.AAT.models.Tutor;
 import de.tum.in.AAT.models.User;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.restlet.Message;
 import org.restlet.data.Form;
-import org.restlet.data.Header;
 import org.restlet.data.MediaType;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
-import org.restlet.util.Series;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.Random;
-import java.util.concurrent.ConcurrentMap;
 
 public class AuthenticateResource extends ServerResource {
 
@@ -76,20 +72,6 @@ public class AuthenticateResource extends ServerResource {
             }
 
         }
-
-
     }
 
-    @SuppressWarnings("unchecked")
-    static Series<Header> getMessageHeaders(Message message) {
-        ConcurrentMap<String, Object> attrs = message.getAttributes();
-        Series<Header> headers = (Series<Header>) attrs.get("org.restlet.http.headers");
-        if (headers == null) {
-            headers = new Series<Header>(Header.class);
-            Series<Header> prev = (Series<Header>)
-                    attrs.putIfAbsent("org.restlet.http.headers", headers);
-            if (prev != null) { headers = prev; }
-        }
-        return headers;
-    }
 }

@@ -10,13 +10,12 @@ import java.net.URL;
 
 public class PushHelper {
 
-    // Method to send Notifications from server to client end.
     public final static String AUTH_KEY_FCM = "AAAAfL6maMk:APA91bFB9chk-DLihuXOUyLW0ptd8OZEfmOjrsGeUCDCKi0JbusCflE2kD7DL9SZIxcLyzv27n92Z_h1FQlaKBqDwsZG6Bv86uyzSghNcCfttKk77OL1V6yJqpItCTI4rS4yXaukgACj";
     public final static String API_URL_FCM = "https://fcm.googleapis.com/fcm/send";
 
     public static void pushFCMNotification(String deviceToken) throws Exception {
 
-        String authKey = AUTH_KEY_FCM; // You FCM AUTH key
+        String authKey = AUTH_KEY_FCM;
         String FMCurl = API_URL_FCM;
 
         URL url = new URL(FMCurl);
@@ -33,8 +32,8 @@ public class PushHelper {
         JSONObject data = new JSONObject();
         data.put("to", deviceToken.trim());
         JSONObject info = new JSONObject();
-        info.put("title", "FCM Notificatoin Title"); // Notification title
-        info.put("body", "Hello First Test notification"); // Notification body
+        info.put("title", "FCM Notificatoin Title");
+        info.put("body", "Hello First Test notification");
         data.put("data", info);
 
         OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
@@ -53,7 +52,6 @@ public class PushHelper {
             response.append(inputLine);
         }
         in.close();
-
     }
 
 }
