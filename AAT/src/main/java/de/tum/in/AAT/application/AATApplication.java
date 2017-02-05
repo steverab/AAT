@@ -22,10 +22,15 @@ public class AATApplication extends Application {
 
         router.attach("/groups", GroupResource.class);
         router.attach("/groups/{groupId}", GroupResource.class);
+        router.attach("/groups/{groupId}/signup", GroupResource.class);
 
         router.attach("/sessions", SessionResource.class);
         router.attach("/sessions/{sessionId}/attendance", SessionResource.class);
         router.attach("/sessions/{sessionId}/presentation", SessionResource.class);
+
+        router.attach("/confirm/{confirmationType}", ConfirmResource.class);
+
+        router.attach("/contributions/{contributionType}", ContributionsResource.class);
 
         return router;
     }
