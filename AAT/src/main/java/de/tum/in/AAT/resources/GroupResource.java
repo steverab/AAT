@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.googlecode.objectify.ObjectifyService;
 import de.tum.in.AAT.helpers.ResourceHelper;
 import de.tum.in.AAT.models.Group;
+import de.tum.in.AAT.models.Student;
 import de.tum.in.AAT.models.Tutor;
 import de.tum.in.AAT.models.User;
 import org.restlet.representation.Representation;
@@ -48,18 +49,55 @@ public class GroupResource extends ServerResource{
     }
 
     @Post
+    public Representation postGroup(Representation entity) {
+        String path = getRequest().getResourceRef().toString();
+        path = path.substring(path.indexOf("api/") + 4);
+        String[] pathComponents = path.split("/");
+
+        if(pathComponents.length == 1) {
+            return createGroup(entity);
+        } else if(pathComponents.length == 3) {
+            return signUpForGroup(entity);
+        }
+
+        return new StringRepresentation("");
+    }
+
     public Representation createGroup(Representation entity) {
         if (getAttribute("groupId") == null) {
-            Tutor tutor = ResourceHelper.authorizeTutorCredentials(this);
-            if (tutor != null) {
-                Group group = new Group(tutor);
-                ObjectifyService.ofy().save().entity(group).now();
-                return new StringRepresentation(group.getId().toString());
+            if (getAttribute("userId") != null) {
+                Student student = ResourceHelper.authorizeStudentCredentials(this);
+                if (student != null) {
+                    // TODO: student signup for group
+                    return new StringRepresentation("");
+                }
             } else {
-                throw new ResourceException(401, "Unauthorized", "Unauthorized", null);
+                Tutor tutor = ResourceHelper.authorizeTutorCredentials(this);
+                if (tutor != null) {
+                    Group group = new Group(tutor);
+                    ObjectifyService.ofy().save().entity(group).now();
+                    return new StringRepresentation(group.getId().toString());
+                } else {
+                    throw new ResourceException(401, "Unauthorized", "Unauthorized", null);
+                }
             }
         } else {
             throw new ResourceException(405, "Not implemented", "Not implemented", null);
+        }
+        return new StringRepresentation("");
+    }
+
+    public Representation signUpForGroup(Representation entity) {
+        Student student = ResourceHelper.authorizeStudentCredentials(this);
+        if (student != null) {
+            Group group =  ObjectifyService.ofy().load().type(Group.class).id(new Long(getAttribute("groupId"))).now();
+            student.setGroup(group);
+            group.getStudents().add(student);
+            ObjectifyService.ofy().save().entity(student).now();
+            ObjectifyService.ofy().save().entity(group).now();
+            return new StringRepresentation("");
+        } else {
+            throw new ResourceException(401, "Unauthorized", "Unauthorized", null);
         }
     }
 

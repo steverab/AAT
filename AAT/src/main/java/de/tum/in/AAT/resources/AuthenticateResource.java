@@ -45,9 +45,16 @@ public class AuthenticateResource extends ServerResource {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("token", token);
             jsonObject.put("userId", user.getId());
+            jsonObject.put("email", user.getEmail());
 
             if (user instanceof Student) {
-                jsonObject.put("groupId", ((Student) user).getGroupId());
+                if (((Student) user).getGroupId() == null) {
+                    jsonObject.put("groupId", -1);
+                } else {
+                    jsonObject.put("groupId", ((Student) user).getGroupId());
+                }
+
+                jsonObject.put("type", "student");
             } else {
                 JSONArray jsonArray = new JSONArray();
                 for (Group group : ((Tutor) user).getGroups()) {
@@ -56,6 +63,7 @@ public class AuthenticateResource extends ServerResource {
                     jsonArray.put(jsonGroupObject);
                 }
                 jsonObject.put("groups", jsonArray);
+                jsonObject.put("type", "tutor");
             }
 
             return new StringRepresentation(jsonObject.toString(), MediaType.APPLICATION_JSON);

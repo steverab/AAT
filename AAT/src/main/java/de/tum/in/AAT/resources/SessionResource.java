@@ -17,6 +17,8 @@ import org.restlet.resource.ServerResource;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -53,7 +55,7 @@ public class SessionResource extends ServerResource {
         String[] pathComponents = path.split("/");
 
         if(pathComponents.length == 1) {
-
+            return createNewSession(entity);
         } else if(pathComponents.length == 3) {
             if (pathComponents[pathComponents.length - 1].equals("attendance")) {
                 return confirmAttendanceRequest(entity);
@@ -65,6 +67,30 @@ public class SessionResource extends ServerResource {
         }
 
         return new StringRepresentation("");
+    }
+
+    public Representation createNewSession(Representation entity) {
+        Tutor tutor = ResourceHelper.authorizeTutorCredentials(this);
+        if (tutor != null) {
+            Form params = new Form(entity);
+            String startDate = params.getFirstValue("startDate");
+            String endDate = params.getFirstValue("endDate");
+            String room = params.getFirstValue("room");
+            String groupId = params.getFirstValue("groupId");
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            Group group =  ObjectifyService.ofy().load().type(Group.class).id(new Long(groupId)).now();
+            try {
+                Session session = new Session(df.parse(startDate), df.parse(endDate), room, group);
+                group.getSessions().add(session);
+                ObjectifyService.ofy().save().entity(session).now();
+                ObjectifyService.ofy().save().entity(group).now();
+                return new StringRepresentation("");
+            } catch (ParseException e) {
+                throw new ResourceException(400, "Client error", "Misformatted date", null);
+            }
+        } else {
+            throw new ResourceException(401, "Unauthorized", "Unauthorized", null);
+        }
     }
 
     private Representation getSessions(){

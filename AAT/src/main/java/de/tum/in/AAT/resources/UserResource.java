@@ -25,6 +25,10 @@ public class UserResource extends ServerResource {
             String email = params.getFirstValue("email");
             String password = params.getFirstValue("password");
 
+            if (email.isEmpty() || password.isEmpty()) {
+                throw new ResourceException(400, "Client error", "Content missing", null);
+            }
+
             User user = null;
 
             if (signUpPassword != null && signUpPassword.equals(tutorSignUpPassword)) {
